@@ -240,22 +240,17 @@ The API provides comprehensive error responses:
 ### Upcoming Features
 
 - [ ] **Docker Support**: Complete containerization with Docker Compose
-- [ ] **Authentication**: API key-based authentication system
 - [ ] **Rate Limiting**: Request rate limiting and throttling
 - [ ] **Metrics**: Prometheus metrics and monitoring
 - [ ] **Logging**: Structured logging with different levels
 - [ ] **Health Checks**: Advanced health check endpoints
-- [ ] **API Versioning**: Support for multiple API versions
-- [ ] **Weather Alerts**: Severe weather notifications
 - [ ] **Historical Data**: Access to historical weather data
-- [ ] **Webhooks**: Weather update notifications via webhooks
 
 ### Infrastructure Improvements
 
 - [ ] **Kubernetes Deployment**: K8s manifests and Helm charts
 - [ ] **CI/CD Pipeline**: Automated testing and deployment
 - [ ] **Load Balancing**: Multi-instance deployment support
-- [ ] **Database Integration**: Persistent storage for user data
 - [ ] **Backup Strategy**: Redis data backup and recovery
 
 ## Contributing
@@ -268,7 +263,7 @@ The API provides comprehensive error responses:
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is free to use.
 
 ## Support
 

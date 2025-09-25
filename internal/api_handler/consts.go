@@ -7,5 +7,14 @@ const (
 
 const (
 	TTL_CITY         = "24h"
-	TTL_CURRENT_TEMP = "15m"
+	TTL_CURRENT_TEMP = "60m"
+	TTL_DAILY_TEMP   = "24h"
+)
+
+const (
+	TIMEZONE = "Europe%2FMoscow"
+)
+
+const (
+	NO_CACHE_DATA_ERROR = "no cache data"
 )

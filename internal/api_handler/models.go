@@ -8,8 +8,23 @@ type geoAPI struct {
 	} `json:"results"`
 }
 
-type Weather struct {
+type CurrentWeather struct {
 	Current struct {
 		Temp float64 `json:"temperature_2m"`
 	} `json:"current"`
+}
+
+type DailyWeather struct {
+	Daily struct {
+		Time    []string  `json:"time"`
+		MaxTemp []float64 `json:"temperature_2m_max"`
+		MinTemp []float64 `json:"temperature_2m_min"`
+	} `json:"daily"`
+}
+
+type HourlyWeather struct {
+	Hourly struct {
+		Time []string  `json:"time"`
+		Temp []float64 `json:"temperature_2m"`
+	} `json:"hourly"`
 }

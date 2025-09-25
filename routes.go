@@ -1,8 +1,9 @@
 package main
 
 const (
-	BASE_ROUTE    = "/v1/"
-	WEATHER_ROUTE = "/v1/weather"
+	API_VERSION   = "/v1"
+	BASE_ROUTE    = "/"
+	WEATHER_ROUTE = "/weather"
 )
 
 const (

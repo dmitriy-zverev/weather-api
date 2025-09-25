@@ -46,8 +46,8 @@ func main() {
 func setupRoutes(cfg *handlers.ApiConfig) *http.ServeMux {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("GET "+BASE_ROUTE, handlers.BaseHandler)
-	mux.HandleFunc("GET "+WEATHER_ROUTE, cfg.WeatherHandler)
+	mux.HandleFunc("GET "+API_VERSION+BASE_ROUTE, handlers.BaseHandler)
+	mux.HandleFunc("GET "+API_VERSION+WEATHER_ROUTE, cfg.WeatherHandler)
 
 	return mux
 }

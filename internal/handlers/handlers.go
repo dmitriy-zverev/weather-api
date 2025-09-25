@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"encoding/json"
 	"net/http"
 
@@ -13,7 +14,7 @@ func BaseHandler(w http.ResponseWriter, req *http.Request) {
 	w.Write([]byte("OK"))
 }
 
-func WeatherHandler(w http.ResponseWriter, req *http.Request) {
+func (cfg *ApiConfig) WeatherHandler(w http.ResponseWriter, req *http.Request) {
 	var params WeatherParams
 
 	if err := json.NewDecoder(req.Body).Decode(&params); err != nil {
@@ -21,9 +22,13 @@ func WeatherHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	weather, err := apihandler.FetchCurrentWeather(params.City)
+	weather, err := apihandler.FetchCurrentWeather(
+		context.Background(),
+		cfg.RedisClient,
+		params.City,
+	)
 	if err != nil {
-		answerWithError(w, "couldn't fetch weather: "+err.Error(), http.StatusInternalServerError)
+		answerWithError(w, "couldn't fetch weather data: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 

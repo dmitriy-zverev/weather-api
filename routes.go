@@ -1,8 +1,8 @@
 package main
 
 const (
-	BASE_ROUTE    = "/"
-	WEATHER_ROUTE = "/weather"
+	BASE_ROUTE    = "/v1/"
+	WEATHER_ROUTE = "/v1/weather"
 )
 
 const (

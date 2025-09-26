@@ -19,7 +19,7 @@ func FetchCurrentWeather(ctx context.Context, rdClient redis.Client, city string
 	if err == nil {
 		return weather, nil
 	}
-	if err.Error() != NO_CACHE_DATA_ERROR && err != nil {
+	if err.Error() != NO_CACHE_DATA_ERROR {
 		log.Println("caching error:", err)
 	}
 
@@ -72,7 +72,7 @@ func FetchWeatherNDays(ctx context.Context, rdClient redis.Client, city string, 
 	if err == nil {
 		return weatherDaily, nil
 	}
-	if err.Error() != NO_CACHE_DATA_ERROR && err != nil {
+	if err.Error() != NO_CACHE_DATA_ERROR {
 		log.Println("caching error:", err)
 	}
 
@@ -122,7 +122,7 @@ func FetchWeatherHourly(ctx context.Context, rdClient redis.Client, city string)
 	if err == nil {
 		return weatherHourly, nil
 	}
-	if err.Error() != NO_CACHE_DATA_ERROR && err != nil {
+	if err.Error() != NO_CACHE_DATA_ERROR {
 		log.Println("caching error:", err)
 	}
 

@@ -8,6 +8,10 @@ A high-performance weather API service built with Go that provides current weath
 - **Daily Forecasts**: Retrieve weather forecasts for multiple days
 - **Hourly Weather**: Access detailed hourly weather data for today
 - **Redis Caching**: Fast response times with intelligent caching
+- **Rate Limiting**: Built-in request rate limiting (7 requests per minute)
+- **Docker Support**: Complete containerization with Docker and Docker Compose
+- **Environment Configuration**: Flexible configuration for development and production
+- **Connection Pooling**: Efficient Redis connection management
 - **RESTful API**: Clean and intuitive API endpoints
 - **Error Handling**: Comprehensive error responses and logging
 
@@ -39,7 +43,10 @@ cd weather-api
 Create a `.env` file in the root directory:
 
 ```env
-REDIS_URL=localhost:6379
+REDIS_URL=localhost
+REDIS_PORT=6379
+PORT=8080
+PLATFORM=dev
 ```
 
 ### 3. Start Redis
@@ -65,6 +72,40 @@ chmod +x start_server.sh
 ```
 
 The server will start on `http://localhost:8080`.
+
+## Docker Deployment
+
+For production deployment using Docker:
+
+### 1. Create Docker Network
+
+```bash
+chmod +x scripts/create_network.sh
+./scripts/create_network.sh
+```
+
+### 2. Build Docker Image
+
+```bash
+chmod +x scripts/build_docker.sh
+./scripts/build_docker.sh
+```
+
+### 3. Run with Docker
+
+```bash
+chmod +x scripts/run_docker.sh
+./scripts/run_docker.sh
+```
+
+This will start both Redis and the Weather API in Docker containers with proper networking.
+
+### 4. Restart Services
+
+```bash
+chmod +x scripts/restart_docker.sh
+./scripts/restart_docker.sh
+```
 
 ## API Documentation
 
@@ -166,11 +207,17 @@ GET /v1/weather
 weather-api/
 ├── main.go                     # Application entry point
 ├── routes.go                   # Route constants and configuration
+├── Dockerfile                  # Docker container configuration
 ├── go.mod                      # Go module dependencies
 ├── go.sum                      # Dependency checksums
 ├── .env                        # Environment variables (create this)
 ├── setup_redis.sh              # Redis setup script
 ├── start_server.sh             # Server startup script
+├── scripts/                    # Docker deployment scripts
+│   ├── build_docker.sh         # Build Docker image
+│   ├── create_network.sh       # Create Docker network
+│   ├── restart_docker.sh       # Restart Docker services
+│   └── run_docker.sh           # Run Docker containers
 └── internal/
     ├── handlers/               # HTTP request handlers
     │   ├── handlers.go         # Main handler implementations
@@ -189,9 +236,12 @@ weather-api/
 
 The application uses environment variables for configuration:
 
-| Variable | Description | Default | Required |
-|----------|-------------|---------|----------|
-| `REDIS_URL` | Redis server address | - | Yes |
+| Variable     | Description                     | Default   | Required |
+|--------------|---------------------------------|-----------|----------|
+| `REDIS_URL`  | Redis server address            | localhost | Yes      |
+| `REDIS_PORT` | Redis server port               | 6379      | Yes      |
+| `PORT`       | Application server port         | 8080      | Yes      |
+| `PLATFORM`   | Environment platform (dev/prod) | prod      | Yes      |
 
 ## Development
 
@@ -228,19 +278,37 @@ The API provides comprehensive error responses:
 - **500 Internal Server Error**: Server-side errors
 - **Detailed Error Messages**: Clear descriptions of what went wrong
 
+## Rate Limiting
+
+The API implements built-in rate limiting to ensure fair usage and prevent abuse:
+
+- **Request Limit**: 7 requests per minute per client
+- **Burst Capacity**: Up to 10 requests can be made in quick succession
+- **Implementation**: Uses Go's `golang.org/x/time/rate` package
+- **Scope**: Rate limiting is applied globally across all endpoints
+
+When rate limits are exceeded, the API will return appropriate HTTP status codes and error messages.
+
 ## Performance
 
 - **Redis Caching**: Reduces response times and external API calls
-- **Connection Pooling**: Efficient Redis connection management
-- **Timeouts**: Configured read/write timeouts prevent hanging requests
+- **Connection Pooling**: Efficient Redis connection management with pool size of 10
+- **Timeouts**: Configured read/write timeouts (1 second each) prevent hanging requests
 - **Concurrent Handling**: Go's goroutines handle multiple requests efficiently
+- **Rate Limiting**: Prevents API abuse while maintaining performance
 
 ## Roadmap
 
-### Upcoming Features
+### Completed Features
 
-- [ ] **Docker Support**: Complete containerization with Docker Compose
-- [ ] **Rate Limiting**: Request rate limiting and throttling
+- [x] **Docker Support**: Complete containerization with Docker networking
+- [x] **Rate Limiting**: Request rate limiting (7 requests per minute)
+- [x] **Environment Configuration**: Flexible dev/prod configuration
+- [x] **Connection Pooling**: Redis connection pooling with timeouts
+
+### Space for Improvement
+
+- [ ] **Docker Compose**: Multi-service orchestration with docker-compose.yml
 - [ ] **Metrics**: Prometheus metrics and monitoring
 - [ ] **Logging**: Structured logging with different levels
 - [ ] **Health Checks**: Advanced health check endpoints
@@ -278,3 +346,4 @@ If you encounter any issues or have questions:
 - [Open-Meteo](https://open-meteo.com/) for providing free weather data
 - [Redis](https://redis.io/) for the excellent caching solution
 - [Go](https://golang.org/) for the robust programming language
+- [Roadmap](https://roadmap.sh/projects/weather-api-wrapper-service) for inspiring

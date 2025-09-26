@@ -22,6 +22,11 @@ func (cfg *ApiConfig) WeatherHandler(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	if !cfg.Limiter.Allow() {
+		answerWithError(w, "too many requests", http.StatusTooManyRequests)
+		return
+	}
+
 	switch params.ForecastType {
 	case CURRENT:
 		weather, err := apihandler.FetchCurrentWeather(

@@ -1,6 +1,9 @@
 package handlers
 
-import "github.com/redis/go-redis/v9"
+import (
+	"github.com/redis/go-redis/v9"
+	"golang.org/x/time/rate"
+)
 
 type WeatherForecastType string
 
@@ -18,4 +21,5 @@ type WeatherParams struct {
 
 type ApiConfig struct {
 	RedisClient redis.Client
+	Limiter     *rate.Limiter
 }

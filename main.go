@@ -11,10 +11,13 @@ import (
 	"github.com/dmitriy-zverev/weather-api/internal/handlers"
 	"github.com/joho/godotenv"
 	"github.com/redis/go-redis/v9"
+	"golang.org/x/time/rate"
 )
 
 type Config struct {
 	RedisURL string
+	Port     string
+	Platform string
 }
 
 func main() {
@@ -32,8 +35,15 @@ func main() {
 		PoolSize:     10,
 	})
 
+	fmt.Println("Starting Redis...")
+	fmt.Printf("Redis running on http://%s\n\n", config.RedisURL)
+
+	// 7 requests per minute (based on API free usage)
+	limiter := rate.NewLimiter(0.1, 10)
+
 	apiConfig := &handlers.ApiConfig{
 		RedisClient: *rdb,
+		Limiter:     limiter,
 	}
 
 	mux := setupRoutes(apiConfig)
@@ -69,12 +79,32 @@ func loadConfig() (*Config, error) {
 		log.Fatal("error: .env file not found, using system variables")
 	}
 
+	platform := os.Getenv("PLATFORM")
+	if platform == "" {
+		return nil, errors.New("PLATFORM string is required")
+	}
+
+	port := os.Getenv("PORT")
+	if port == "" {
+		return nil, errors.New("PORT string is required")
+	}
+
+	rdPort := os.Getenv("REDIS_PORT")
+	if rdPort == "" {
+		return nil, errors.New("REDIS_PORT string is required")
+	}
+
 	redisURL := os.Getenv("REDIS_URL")
 	if redisURL == "" {
 		return nil, errors.New("REDIS_URL string is required")
 	}
+	if platform == "prod" {
+		redisURL = "redis"
+	}
 
 	return &Config{
-		RedisURL: redisURL,
+		RedisURL: redisURL + ":" + rdPort,
+		Port:     port,
+		Platform: platform,
 	}, nil
 }
